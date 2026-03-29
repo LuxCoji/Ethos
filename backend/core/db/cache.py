@@ -9,6 +9,12 @@ _GLOBAL_FEED_CACHE_KEY = "feed:global:v2"
 _USER_FEED_CACHE_PREFIX = "feed:user:v2:"
 
 
+def _user_feed_cache_key(user_id: str, limit: int | None = None) -> str:
+    if limit is None:
+        return f"{_USER_FEED_CACHE_PREFIX}{user_id}"
+    return f"{_USER_FEED_CACHE_PREFIX}{user_id}:{limit}"
+
+
 def _get_client():
     global _redis_client
     if _redis_client is None:
@@ -33,13 +39,18 @@ async def set_cached_feed(feed_data: list, ttl: int = 300) -> None:
 
 # ── Per-user personalized feed ─────────────────────────────────────────────
 
-async def get_cached_user_feed(user_id: str) -> list | None:
-    data = await _get_client().get(f"{_USER_FEED_CACHE_PREFIX}{user_id}")
+async def get_cached_user_feed(user_id: str, limit: int | None = None) -> list | None:
+    data = await _get_client().get(_user_feed_cache_key(user_id, limit))
     return json.loads(data) if data else None
 
 
-async def set_cached_user_feed(user_id: str, feed_data: list, ttl: int = 120) -> None:
-    await _get_client().setex(f"{_USER_FEED_CACHE_PREFIX}{user_id}", ttl, json.dumps(feed_data))
+async def set_cached_user_feed(
+    user_id: str,
+    feed_data: list,
+    ttl: int = 120,
+    limit: int | None = None,
+) -> None:
+    await _get_client().setex(_user_feed_cache_key(user_id, limit), ttl, json.dumps(feed_data))
 
 
 # ── Individual article ─────────────────────────────────────────────────────

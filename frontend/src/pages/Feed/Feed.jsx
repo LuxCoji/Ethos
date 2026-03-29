@@ -99,7 +99,11 @@ export default function Feed() {
 
           <div className={styles.toggleWrap} onClick={() => {
             setLoading(true)
-            setPersonalized(p => !p)
+            const nextPersonalized = !personalized
+            if (nextPersonalized && filter !== 'All') {
+              setFilter('All')
+            }
+            setPersonalized(nextPersonalized)
           }}>
             <div className={`${styles.toggle} ${personalized ? styles.on : ''}`}>
               <div className={styles.toggleThumb} />

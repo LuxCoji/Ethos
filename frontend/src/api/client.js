@@ -107,9 +107,17 @@ export async function getFeed(category = 'All', trending = false) {
   return data.data ?? data;
 }
 
-export async function getPersonalizedFeed(userId = getCurrentUserId()) {
+export async function getPersonalizedFeed(userId = getCurrentUserId(), limit = 50) {
   if (!userId) throw new Error('No authenticated user found.');
-  const { data } = await client.get(`/personalized_feed/${userId}`);
+
+  const params = new URLSearchParams();
+  if (Number.isInteger(limit) && limit > 0) {
+    params.append('limit', String(limit));
+  }
+
+  const query = params.toString();
+  const url = query ? `/personalized_feed/${userId}?${query}` : `/personalized_feed/${userId}`;
+  const { data } = await client.get(url);
   return data.data ?? data;
 }
 
