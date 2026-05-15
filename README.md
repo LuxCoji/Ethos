@@ -35,3 +35,15 @@ uv add <package>          # commits pyproject.toml + uv.lock
 # JS
 cd frontend && npm install <package>
 ```
+
+## Monitoring (Prometheus + Grafana)
+
+1. Start backend locally (`uv run uvicorn backend.main:app --reload --port 8000`).
+2. Start monitoring stack:
+   ```bash
+   docker compose up -d prometheus grafana
+   ```
+3. Open:
+   - Prometheus: `http://localhost:9090`
+   - Grafana: `http://localhost:3000` (default login `admin` / `admin`)
+4. In Grafana, add Prometheus datasource URL: `http://prometheus:9090`.

@@ -12,6 +12,7 @@ uv run uvicorn backend.main:app --reload --port 8000
 ```
 
 API available at `http://localhost:8000`. Docs at `/docs`.
+System metrics exposed at `/metrics` (Prometheus format).
 
 ## Key env vars (`backend/.env`)
 
