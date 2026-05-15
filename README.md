@@ -41,9 +41,11 @@ cd frontend && npm install <package>
 1. Start backend locally (`uv run uvicorn backend.main:app --reload --port 8000`).
 2. Start monitoring stack:
    ```bash
+   export GRAFANA_ADMIN_USER=admin
+   export GRAFANA_ADMIN_PASSWORD='<strong-password>'
    docker compose up -d prometheus grafana
    ```
 3. Open:
    - Prometheus: `http://localhost:9090`
-   - Grafana: `http://localhost:3000` (default login `admin` / `admin`)
+   - Grafana: `http://localhost:3000` (login uses `GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD`)
 4. In Grafana, add Prometheus datasource URL: `http://prometheus:9090`.
