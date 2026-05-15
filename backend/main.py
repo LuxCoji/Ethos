@@ -13,6 +13,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 
 from backend.config import get_settings
 from backend.core.logging_config import setup_logging
@@ -85,6 +86,14 @@ def create_app() -> FastAPI:
     @app.get("/health", tags=["System"])
     async def health():
         return {"status": "ok", "environment": settings.environment}
+
+    @app.get("/metrics", tags=["System"], response_class=PlainTextResponse)
+    async def metrics():
+        return (
+            "# HELP ethos_api_up Ethos API process health.\n"
+            "# TYPE ethos_api_up gauge\n"
+            f'ethos_api_up{{environment="{settings.environment}"}} 1\n'
+        )
 
     return app
 

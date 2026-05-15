@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: ethos_backend
+    metrics_path: /metrics
+    static_configs:
+      # Backend must be running on port 8000 as documented in README.
+      - targets: ["host.docker.internal:8000"]
